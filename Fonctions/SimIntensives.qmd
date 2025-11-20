@@ -1,0 +1,157 @@
+---
+title: "Exemples de simulations intensives"
+subtitle: "Scénario sparses et denses"
+format: 
+  html:
+    self-contained: true
+    theme: cosmo
+    toc: true
+    toc-depth: 4
+    toc-location: right
+    toc-title: "Table des matières"
+    title-block-banner: "#F4F8FF"
+    title-block-banner-color: "#0F2769"
+    header-includes: |
+      <style>
+        h1 {color: #0F2769;}
+        h2 {color: #294CAA;}
+        h3 {color: #608DE4;}
+        h4 {color: #90AEFF;}
+      </style>
+editor: visual
+---
+
+```{r, message=FALSE}
+source('../Fonctions/Simulations.R')
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+```
+
+## Scénario sparses
+
+Scénario imaginés dans le cadre du stage pour données sparses, étendus au contexte de données denses.
+
+### Graphiques complets
+
+```{r}
+# 10 mesures
+data.simu1 <- generation.data(250, 10, 20, "sparse", 1)
+data.simu2 <- generation.data(250, 10, 20, "sparse", 2)
+data.simu3 <- generation.data(250, 10, 20, "sparse", 3)
+data.simu4 <- generation.data(250, 10, 20, "sparse", 4)
+graph1 <- plot.data(data.simu1, title = "Scenario 1", legend = F, x = " ", y = "Marqueur", title.pos = 0.5)
+graph2 <- plot.data(data.simu2, title = "Scenario 2", legend = F, x = " ", y = " ", title.pos = 0.5)
+graph3 <- plot.data(data.simu3, title = "Scenario 3", legend = F, x = "Temps", y = "Marqueur", title.pos = 0.5)
+graph4 <- plot.data(data.simu4, title = "Scenario 4", legend = T, legend.name = "Type d'évolution", x = "Temps", y = " ", title.pos = 0.5)
+graph.complet_10 <- (graph1 + graph2) / (graph3 + graph4) + 
+  plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+graph.complet_10
+```
+
+```{r}
+# 50 mesures
+data.simu1 <- generation.data(250, 50, 20, "sparse", 1)
+data.simu2 <- generation.data(250, 50, 20, "sparse", 2)
+data.simu3 <- generation.data(250, 50, 20, "sparse", 3)
+data.simu4 <- generation.data(250, 50, 20, "sparse", 4)
+graph1 <- plot.data(data.simu1, title = "Scenario 1", legend = F, x = " ", y = "Marqueur", title.pos = 0.5)
+graph2 <- plot.data(data.simu2, title = "Scenario 2", legend = F, x = " ", y = " ", title.pos = 0.5)
+graph3 <- plot.data(data.simu3, title = "Scenario 3", legend = F, x = "Temps", y = "Marqueur", title.pos = 0.5)
+graph4 <- plot.data(data.simu4, title = "Scenario 4", legend = T, legend.name = "Type d'évolution", x = "Temps", y = " ", title.pos = 0.5)
+graph.complet_50 <- (graph1 + graph2) / (graph3 + graph4) + 
+  plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+graph.complet_50
+```
+
+```{r}
+# 100 mesures
+data.simu1 <- generation.data(250, 100, 20, "sparse", 1)
+data.simu2 <- generation.data(250, 100, 20, "sparse", 2)
+data.simu3 <- generation.data(250, 100, 20, "sparse", 3)
+data.simu4 <- generation.data(250, 100, 20, "sparse", 4)
+graph1 <- plot.data(data.simu1, title = "Scenario 1", legend = F, x = " ", y = "Marqueur", title.pos = 0.5)
+graph2 <- plot.data(data.simu2, title = "Scenario 2", legend = F, x = " ", y = " ", title.pos = 0.5)
+graph3 <- plot.data(data.simu3, title = "Scenario 3", legend = F, x = "Temps", y = "Marqueur", title.pos = 0.5)
+graph4 <- plot.data(data.simu4, title = "Scenario 4", legend = T, legend.name = "Type d'évolution", x = "Temps", y = " ", title.pos = 0.5)
+graph.complet_100 <- (graph1 + graph2) / (graph3 + graph4) + 
+  plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+graph.complet_100
+```
+
+```{r}
+# 250 mesures
+data.simu1 <- generation.data(250, 250, 20, "sparse", 1)
+data.simu2 <- generation.data(250, 250, 20, "sparse", 2)
+data.simu3 <- generation.data(250, 250, 20, "sparse", 3)
+data.simu4 <- generation.data(250, 250, 20, "sparse", 4)
+graph1 <- plot.data(data.simu1, title = "Scenario 1", legend = F, x = " ", y = "Marqueur", title.pos = 0.5)
+graph2 <- plot.data(data.simu2, title = "Scenario 2", legend = F, x = " ", y = " ", title.pos = 0.5)
+graph3 <- plot.data(data.simu3, title = "Scenario 3", legend = F, x = "Temps", y = "Marqueur", title.pos = 0.5)
+graph4 <- plot.data(data.simu4, title = "Scenario 4", legend = T, legend.name = "Type d'évolution", x = "Temps", y = " ", title.pos = 0.5)
+graph.complet_250 <- (graph1 + graph2) / (graph3 + graph4) + 
+  plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+graph.complet_250
+```
+
+### Graphiques avec NA
+
+*SCÉNARIO À RECALIBRER POUR S'ADAPTER À L'AUGMENTATION DU NOMBRE DE MESURES*
+
+```{r}
+# Boucle NA Manuelle
+source("Simulations.R")
+k <- 500
+scen <- 1
+tx.do <- 0.3
+pattern <- "threshMNAR"
+do.mean <- numeric(k)
+for (i in 1:k){
+  data.simu <- generation.data(250, 100, 20, "sparse", scen)
+  data.long <- data.frame(id = rep(1:ncol(data.simu$t),
+                                   each = nrow(data.simu$t)),
+                          temps = as.vector(data.simu$t),
+                          y = as.vector(data.simu$y),
+                          groupe = rep(data.simu$groupe,
+                                       each = nrow(data.simu$t)))
+  data.dropout <- dropout(data = data.simu, miss.pattern = pattern, txdo = tx.do, scenario = scen)
+  do.mean[i] <- data.dropout$txevent
+}
+mean(do.mean)
+```
+
+```{r}
+# Graphiques
+scen <- 2
+tx.do <- 0.3
+data.simu <- generation.data(250, 100, 20, "sparse", scen)
+data.dpo1 <- dropout(data.simu, "threshMAR", tx.do, scen)
+data.dpo2 <- dropout(data.simu, "threshMNAR", tx.do, scen)
+data.dpo3 <- dropout(data.simu, "incrMAR", tx.do, scen)
+data.dpo4 <- dropout(data.simu, "incrMNAR", tx.do, scen)
+graph1 <- plot.data(data.dpo1, title = "Threshold MAR", legend = F, x = " ", y = "Marqueur", title.pos = 0.5)
+graph2 <- plot.data(data.dpo2, title = "Threshold MNAR", legend = F, x = " ", y = " ", title.pos = 0.5)
+graph3 <- plot.data(data.dpo3, title = "Increasing MAR", legend = F, x = "Temps", y = "Marqueur", title.pos = 0.5)
+graph4 <- plot.data(data.dpo4, title = "Increasing MNAR", legend = T, x = "Temps", y = " ", title.pos = 0.5)
+graph.na <- (graph1 + graph2) / (graph3 + graph4) + 
+  plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+graph.na
+```
+
+## Scénarios denses
+
+Scénario imaginés pour un contexte de données denses.
+
+```{r}
+data.simu1 <- generation.data(250, 250, 20, "dense", 1, ngroups = 3)
+data.simu2 <- generation.data(250, 250, 20, "dense", 2, ngroups = 3)
+data.simu3 <- generation.data(250, 250, 20, "dense", 3, ngroups = 3)
+data.simu4 <- generation.data(250, 250, 20, "dense", 4, ngroups = 3)
+graph1 <- plot.data(data.simu1, title = "Scenario 1", legend = F, x = " ", y = "Marqueur", title.pos = 0.5)
+graph2 <- plot.data(data.simu2, title = "Scenario 2", legend = F, x = " ", y = " ", title.pos = 0.5)
+graph3 <- plot.data(data.simu3, title = "Scenario 3", legend = F, x = "Temps", y = "Marqueur", title.pos = 0.5)
+graph4 <- plot.data(data.simu4, title = "Scenario 4", legend = T, legend.name = "Type d'évolution", x = "Temps", y = " ", title.pos = 0.5)
+graph.complet <- (graph1 + graph2) / (graph3 + graph4) + 
+  plot_layout(guides = 'collect') & theme(legend.position = 'bottom')
+graph.complet
+```
