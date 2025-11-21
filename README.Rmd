@@ -1,10 +1,19 @@
 ---
-title: "README"
-output: html_document
+output: github_document
 ---
 
-# Titre 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## Sous-titre
- 
-Ceci est un test. 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# clust4fun
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+Ceci est un test ! 
