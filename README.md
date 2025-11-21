@@ -7,6 +7,6 @@
 
 <!-- badges: end -->
 
-Cette page sera destinée à accueillir le futur package **clust4fun**
-destiné au clustering de données longitudidales de santé, éparses comme
-intensives.
+Cette page est destinée à accueillir le futur package **clust4fun**,
+dont l’objectif sera de permettre le clustering de données
+longitudidales de santé, éparses comme intensives.
