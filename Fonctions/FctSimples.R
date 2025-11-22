@@ -1,10 +1,9 @@
 
 # Chargement des packages 
-packages <- c( "ggplot2", "dplyr", "tidyr", "lcmm", "splines", 
-               "fdapace", "face", "cluster", "randomForest", 
-               "mclust", "kml", "dtwclust", "dtw", "fpc", "TSdist",
-               "future", "future.apply", "parallel", 
-               "viridis", "ComplexHeatmap", "grid")
+packages <- c("ggplot2", "dplyr", "tidyr", "lcmm", "splines", 
+              "fdapace", "face", "cluster", "randomForest", 
+              "mclust", "kml", "dtwclust", "dtw", "fpc", "TSdist",
+              "parallel", "doParallel", "viridis", "ComplexHeatmap", "grid")
 
 invisible(lapply(packages, function(pkg) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
@@ -237,7 +236,7 @@ hlme.fct <- function(id, temps, marqueur, k = 2,
               clusters = res.clusters, convergence = conv.status, graphique = res.graph))
 }
 acpf.fct <- function(id, temps, marqueur, k = 2, k.mult = TRUE, 
-                     clustering = 'km', pam.type = FALSE, pve = 0.99, 
+                     clustering = 'gmm', pam.type = FALSE, pve = 0.99, 
                      grid = 51, binnedData = "AUTO", nmes.min = 3) {
   
   # 1 - Données
@@ -421,7 +420,7 @@ dtw.dist <- function(data) {
   data.list <- split(data.wide, seq_len(nrow(data.wide)))
 
   # 2 - Matrice des distances
-  dist.mat <- dist(data.list, method = distance)
+  dist.mat <- dist(data.list, method = 'dtw')
   dist.mat <- as.matrix(dist.mat)
   
   return(dist.mat)

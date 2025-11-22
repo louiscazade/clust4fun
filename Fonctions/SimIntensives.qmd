@@ -143,6 +143,7 @@ graph.na
 Scénario imaginés pour un contexte de données denses.
 
 ```{r}
+source('../Fonctions/Simulations.R')
 data.simu1 <- generation.data(250, 250, 20, "dense", 1, ngroups = 3)
 data.simu2 <- generation.data(250, 250, 20, "dense", 2, ngroups = 3)
 data.simu3 <- generation.data(250, 250, 20, "dense", 3, ngroups = 3)

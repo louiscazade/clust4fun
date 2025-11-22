@@ -4,7 +4,7 @@ library(mvtnorm)
 library(nlraa)
 
 generation.data <- function(n, nmes, tmax, type = c("sparse", "dense"), scenario = 1, 
-                            ngroups = 2, prob.group = NULL,
+                            ngroups = NULL, prob.group = NULL,
                             rho = 0.7, sd_bruit = 0.1){
   
   type <- match.arg(type)
@@ -24,7 +24,10 @@ generation.data <- function(n, nmes, tmax, type = c("sparse", "dense"), scenario
   } 
   
   # 3 - Attribution des groupes 
-  if (type == "sparse"){ngroups <- ifelse(scenario %in% c(1,2,3), 2, 3)}
+  if (type == "sparse"){
+    ngroups <- ifelse(scenario %in% c(1,2,3), 2, 3)} 
+  else if (type == "dense"){
+    if (is.null(ngroups)) {ngroups <- ifelse(scenario %in% c(2,3,4), 3, 2)}}
   if (is.null(prob.group)){prob.group <- rep(1/ngroups, ngroups)}
   groups <- sample(0:(ngroups-1), n, replace = TRUE, prob = prob.group)
   
@@ -44,43 +47,54 @@ generation.data <- function(n, nmes, tmax, type = c("sparse", "dense"), scenario
       # Quadratique
       if (scenario == 1) { 
         if (g == 0) {
-          a <- -abs(0.03 + rnorm(1, 0, 0.02))
-          b <- -abs(2 + rnorm(1, 0, 0.3))
-          c0 <- 500 + rnorm(1, 0, 10)
-        } else if (g == 1) {
           a <- -abs(0.01 + rnorm(1, 0, 0.02))
           b <- -abs(3 + rnorm(1, 0, 0.3))
-          c0 <- 475 + rnorm(1, 0, 10)
-        } else {
+          c0 <- 475 + rnorm(1, 0, 10)} 
+        else if (g == 1) {
           a <- -abs(0.05 + rnorm(1, 0, 0.02))
           b <- -abs(1.5 + rnorm(1, 0, 0.3))
           c0 <- 525 + rnorm(1, 0, 10)}
         y[, i] <- a * t[, i]^2 + b * t[, i] + c0} 
       
       # Sinusoïdes 
+      # Sinusoïdes (version légèrement différenciée)
       else if (scenario == 2) { 
         if (g == 0) { 
-          A <- 80; B <- 2*pi/tmax; C <- 0} 
+          A <- 70                 # avant 80
+          B <- 2*pi/tmax          
+          C <- -pi/12             # petit décalage négatif
+          base <- 490             # baseline légèrement plus basse
+        } 
         else if (g == 1) { 
-          A <- 60; B <- 2*pi/tmax; C <- pi/4} 
-        else { 
-          A <- 100; B <- 2*pi/tmax; C <- pi/2}
-        y[, i] <- 500 + A * sin(B * t[, i] + C)} 
+          A <- 55                 # avant 60
+          B <- 2*pi/tmax 
+          C <- pi/4               # inchangé mais + contraste
+          base <- 505
+        } 
+        else if (g == 2) { 
+          A <- 95                 # avant 100
+          B <- 2*pi/tmax
+          C <- 3*pi/4             # avant pi/2 → décalage agrandi
+          base <- 515
+        }
+        y[, i] <- base + A * sin(B * t[, i] + C)
+      }
+      
       
       # Sigmoïdes
       else if (scenario == 3) {  
         if (g == 0) { 
-          L <- 600; k <- 0.8; x0 <- tmax/2 }
+          L <- 600 ; k <- 0.8 ; x0 <- tmax/2} 
         else if (g == 1) { 
-          L <- 550; k <- 1.3; x0 <- tmax/2.5 }
-        else { 
-          L <- 650; k <- 1.0; x0 <- tmax/1.75 }
+          L <- 550 ; k <- 1.3 ; x0 <- tmax/2.5} 
+        else if (g == 2) { 
+          L <- 650 ; k <- 1.0 ; x0 <- tmax/1.75 }
         y[, i] <- L / (1 + exp(-k * (t[, i] - x0)))} 
       
       # Mix quadratique + sinusoïdal
       else if (scenario == 4) { 
         if (g == 0) {
-          y[, i] <- 400 + 0.5*(t[, i]^2) - 5*t[, i] + 40*sin(2*pi*t[, i]/tmax)} 
+          y[, i] <- 390 + 0.5*(t[, i]^2) - 5*t[, i] + 50*sin(2*pi*t[, i]/tmax)} 
         else if (g == 1) {
           y[, i] <- 420 + 0.4*(t[, i]^2) - 4*t[, i] + 60*sin(2*pi*t[, i]/tmax + 1)} 
         else {
